@@ -37,6 +37,22 @@ db.once('open', function callback () {
 
 var iamporter = new Iamporter();
 
+var user = mongoose.Schema({
+    name:String,
+    id:String,
+    password:String,
+    profileImage:String,
+    credit:String,
+    cardNumber:String,
+    cardPassword:String,
+    cardBirthday:String,
+    cardExpiry:String,
+});
+
+var userModel = mongoose.model('userModel',user);
+
+require('./routes/auth')(app , userModel , randomString);
+require('./routes/user')(app , userModel , iamporter , IamporterError);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
