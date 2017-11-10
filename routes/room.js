@@ -59,8 +59,11 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
 
         var friendToken;
 
+        console.log(data.friendCode);
+
         userModel.find({"userCode":data.friendCode},(err,model)=>{
             if(err) throw err;
+            console.log(model.length);
             if(model.length == 0){
                 res.send(404,"friend not found");
             }
@@ -111,7 +114,9 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                 var userToken = model[0]["token"];
                 var friendToken = model[0]["friendToken"];
 
-                if(data.answer == true){
+                console.log(userToken + "         "+ friendToken);
+                var dataModel = model;
+                if(data.answer == "save"){
                     roomModel.find({"user1Token":userToken},(err,model)=>{
                         if(err) throw err;
                         if(model.length == 0){
@@ -124,8 +129,9 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                             roomModel.find({"user2Token":friendToken},(err,model)=>{
                                                 if(err) throw err;
                                                 if(model.length == 0){
-                                                    var awardCredit = model[0]["awardCredit"];
-                                                    var goalDistance = model[0]["goalDistance"];
+                                                    console.log(dataModel[0]);
+                                                    var awardCredit = dataModel[0]["awardCredit"];
+                                                    var goalDistance = dataModel[0]["goalDistance"];
                                                     userModel.find({"token":friendToken},(err,model)=>{
                                                         if(err) throw err;
                                                         if(model[0]["credit"] < awardCredit){
@@ -172,7 +178,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
 
                 }
                 else{
-                    acceptRoomModel.remove({"acceptToken":data.acceptToken},(err,model)=>{
+                    acceptRoomModel.findOneAndRemove({"acceptToken":data.acceptToken},(err,model)=>{
                         if(err) throw err;
 
                         res.send(200,"remove success");
@@ -225,7 +231,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                                         userModel.update({"token":friendToken},{$set:{"credit":credit}},(err,model)=>{
                                                             if(err) throw err;
 
-                                                            roomModel.remove({"user2Token":data.token},(err,model)=>{
+                                                            roomModel.findOneAndRemove({"user2Token":data.token},(err,model)=>{
                                                                 if(err) throw err;
 
                                                                 res.send(200,"you win")
@@ -250,40 +256,48 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                 });
             }
             else{
-                var userDistance = model[0]["user1Distance"] + data.userDistance;
+                roomModel.find({"user1Token":data.token},(err,model)=>{
+                    if(err) throw err;
+                    if(model.length == 0){
+                        res.send(409,"room not found")
+                    }
+                    else{
+                        var userDistance = model[0]["user1Distance"] + data.userDistance;
+                        var goalCredit = model[0]["goalCredit"];
 
-
-                if(userDistance >= model[0]["goalDistance"]){
-                    friendModel.find({"token":data.token},(err,model)=>{
-                        if(err) throw err;
-
-                        var win = model[0]["win"] + 1;
-
-                        friendModel.update({"token":data.token},{$set:{"win":win}},(err,model)=>{
-                            if(err) throw err;
-                            friendModel.find({"friendToken":data.token},(err,model)=>{
+                        if(userDistance >= model[0]["goalDistance"]){
+                            friendModel.find({"token":data.token},(err,model)=>{
                                 if(err) throw err;
-                                var lose = model[0]["lose"] + 1;
-                                var friendToken = model[0]["token"];
-                                friendModel.update({"friendToken":data.token},{$set:{"lose":lose}},(err,model)=>{
-                                    if(err) throw err;
 
-                                    userModel.find({"token":data.token},(err,model)=>{
+                                var win = model[0]["win"] + 1;
+
+                                friendModel.update({"token":data.token},{$set:{"win":win}},(err,model)=>{
+                                    if(err) throw err;
+                                    friendModel.find({"friendToken":data.token},(err,model)=>{
                                         if(err) throw err;
-                                        var credit = model[0]["credit"] + goalCredit;
-                                        userModel.update({"token":data.token},{$set:{"credit":credit}},(err,model)=>{
+                                        var lose = model[0]["lose"] + 1;
+                                        var friendToken = model[0]["token"];
+                                        friendModel.update({"friendToken":data.token},{$set:{"lose":lose}},(err,model)=>{
                                             if(err) throw err;
 
-                                            userModel.find({"token":friendToken},(err,model)=>{
+                                            userModel.find({"token":data.token},(err,model)=>{
                                                 if(err) throw err;
-                                                var credit = model[0]["credit"] - goalCredit;
-                                                userModel.update({"token":friendToken},{$set:{"credit":credit}},(err,model)=>{
+                                                var credit = model[0]["credit"] + goalCredit;
+                                                userModel.update({"token":data.token},{$set:{"credit":credit}},(err,model)=>{
                                                     if(err) throw err;
 
-                                                    roomModel.remove({"user1Token":data.token},(err,model)=>{
+                                                    userModel.find({"token":friendToken},(err,model)=>{
                                                         if(err) throw err;
+                                                        var credit = model[0]["credit"] - goalCredit;
+                                                        userModel.update({"token":friendToken},{$set:{"credit":credit}},(err,model)=>{
+                                                            if(err) throw err;
 
-                                                        res.send(200,"you win")
+                                                            roomModel.findOneAndRemove({"user1Token":data.token},(err,model)=>{
+                                                                if(err) throw err;
+
+                                                                res.send(200,"you win")
+                                                            });
+                                                        });
                                                     });
                                                 });
                                             });
@@ -291,16 +305,16 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                     });
                                 });
                             });
-                        });
-                    });
-                }
-                else{
-                    roomModel.update({"user1Token":data.token},{$set:{"user1Distance":userDistance}},(err,model)=>{
-                        if(err) throw err;
+                        }
+                        else{
+                            roomModel.update({"user1Token":data.token},{$set:{"user1Distance":userDistance}},(err,model)=>{
+                                if(err) throw err;
 
-                        res.send(200 , "userDistance update success");
-                    });
-                }
+                                res.send(200 , "userDistance update success");
+                            });
+                        }
+                    }
+                });
             }
         });
     });

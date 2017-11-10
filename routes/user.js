@@ -4,7 +4,7 @@
 
 module.exports = user;
 
-function user(app , userModel , iamporter , IamporterError) {
+function user(app , userModel , iamporter , IamporterError , randomString) {
     app.post('/user/update/name',(req,res)=>{
         "use strict";
         var data = req.body;
@@ -36,7 +36,7 @@ function user(app , userModel , iamporter , IamporterError) {
                 res.send(404,"uesr not found");
             }
             else{
-                userModel.update({"token":token},{$set:{"cardNumber":data.cardNumber,"cardPassword":data.cardPassword,"cardBirthday":data.cardBirthday,"cardExpiry":data.cardExpiry}},(err,model)=>{
+                userModel.update({"token":data.token},{$set:{"cardNumber":data.cardNumber,"cardPassword":data.cardPassword,"cardBirthday":data.cardBirthday,"cardExpiry":data.cardExpiry}},(err,model)=>{
                     if(err) throw err;
 
                     res.send(200 , data.cardNumber);
@@ -57,7 +57,7 @@ function user(app , userModel , iamporter , IamporterError) {
             }
             else{
                 iamporter.payOnetime({
-                    'merchant_uid':randomstring.generate(10),
+                    'merchant_uid':randomString.generate(10),
                     'amount':data.amount,
                     'card_number': model[0]["cardNumber"],
                     'expiry': model[0]["cardExpiry"],
@@ -71,7 +71,10 @@ function user(app , userModel , iamporter , IamporterError) {
                     }
                 });
 
-                res.send(200);
+                userModel.update({"token":data.token},{$set:{"credit":data.amount}},(err,model)=>{
+                    if(err) throw err;
+                    res.send(200,data.amount);
+                });
             }
         });
     });

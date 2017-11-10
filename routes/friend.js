@@ -52,11 +52,13 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
         var friendName = data.name.split("#")[0];
         var friendCode = data.name.split("#")[1];
 
+        console.log(friendName + "      "+friendCode);
+
         var friendToken;
 
         var acceptToken = randomString.generate();
 
-        userModel.find({"name":friendName ,"code":friendCode},(err,model)=>{
+        userModel.find({"name":friendName,"userCode":friendCode},(err,model)=>{
             if(err) throw err;
 
             if(model.length == 0){
@@ -102,7 +104,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                 res.send(400,"accept token not found");
             }
             else{
-                if(data.answer == true){
+                if(data.answer == "save"){
                     var userToken = model[0]["token"];
                     var friendToken = model[0]["friendToken"];
 
@@ -142,7 +144,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
 
                                 saveYouFriend.save((err,model)=>{
                                     if(err) throw err;
-                                    acceptFriendModel.remove({"acceptToken":data.acceptToken},(err,model)=>{
+                                    acceptFriendModel.findOneAndRemove({"acceptToken":data.acceptToken},(err,model)=>{
                                         if(err) throw err;
 
                                         res.send(200,"save success");
@@ -153,7 +155,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                     });
                 }
                 else{
-                    acceptFriendModel.remove({"acceptToken":data.acceptToken},(err,model)=>{
+                    acceptFriendModel.findOneAndRemove({"acceptToken":data.token},(err,model)=>{
                         if(err) throw err;
 
                         res.send(200,"remove success");

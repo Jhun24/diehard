@@ -92,7 +92,7 @@ var acceptFriendModel = mongoose.model('acceptFriendModel',acceptFriend);
 var acceptRoomModel = mongoose.model('acceptRoomModel',acceptRoom);
 
 require('./routes/auth')(app , userModel , randomString);
-require('./routes/user')(app , userModel , iamporter , IamporterError);
+require('./routes/user')(app , userModel , iamporter , IamporterError , randomString);
 require('./routes/friend')(app , friendModel , userModel , acceptFriendModel , randomString);
 require('./routes/room')(app , userModel , roomModel , acceptRoomModel , randomString , friendModel);
 

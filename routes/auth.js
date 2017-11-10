@@ -10,13 +10,16 @@ function auth(app , userModel , randomString) {
             if(err) throw err;
 
             if(model.length == 0){
-                data.token = randomString.generate();
-
-                var saveUser = new userModel(data);
-                saveUser.save((err,model)=>{
+                userModel.find({},(err,model)=>{
                     if(err) throw err;
+                    data.token = randomString.generate();
+                    data.userCode = model.length + 1;
+                    var saveUser = new userModel(data);
+                    saveUser.save((err,model)=>{
+                        if(err) throw err;
 
-                    res.send(200,model);
+                        res.send(200,model);
+                    });
                 });
             }
             else{
