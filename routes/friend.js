@@ -32,7 +32,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                 res.send(404,"user not found");
             }
             else{
-                acceptFriendModel.find({"token":token},(err,model)=>{
+                acceptFriendModel.find({"friendToken":token},(err,model)=>{
                     if(err) throw err;
                     if(model.length == 0){
                         res.send(200, "no accept friend")
@@ -73,10 +73,12 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                         res.send(404,"user not found");
                     }
                     else{
+                        var userName = model[0]["name"]
                         var saveAcceptFriend = new acceptFriendModel({
                             "token":data.token,
                             "friendToken":friendToken,
                             "acceptToken":acceptToken,
+                            "name":userName,
                         });
 
                         saveAcceptFriend.save((err,model)=>{

@@ -55,9 +55,9 @@ var room = mongoose.Schema({
     user1Token:String,
     user2Token:String,
     awardCredit:String,
-    goalDistance:String,
-    user1Distance:String,
-    user2Distance:String,
+    goalDistance:Number,
+    user1Distance:Number,
+    user2Distance:Number,
 });
 
 var friend = mongoose.Schema({
@@ -73,17 +73,28 @@ var acceptFriend = mongoose.Schema({
     token:String,
     friendToken:String,
     acceptToken:String,
+    name:String,
+});
+
+var acceptRoom = mongoose.Schema({
+    token:String,
+    friendToken:String,
+    awardCredit:String,
+    goalDistance:Number,
+    acceptToken:String,
+    name:String,
 });
 
 var userModel = mongoose.model('userModel',user);
 var roomModel = mongoose.model('roomModel',room);
 var friendModel = mongoose.model('friendModel',friend);
 var acceptFriendModel = mongoose.model('acceptFriendModel',acceptFriend);
+var acceptRoomModel = mongoose.model('acceptRoomModel',acceptRoom);
 
 require('./routes/auth')(app , userModel , randomString);
 require('./routes/user')(app , userModel , iamporter , IamporterError);
 require('./routes/friend')(app , friendModel , userModel , acceptFriendModel , randomString);
-require('./routes/room')(app , userModel , roomModel);
+require('./routes/room')(app , userModel , roomModel , acceptRoomModel , randomString , friendModel);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
