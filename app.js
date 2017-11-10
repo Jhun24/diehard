@@ -39,6 +39,7 @@ var iamporter = new Iamporter();
 
 var user = mongoose.Schema({
     token:String,
+    userCode:String,
     name:String,
     id:String,
     password:String,
@@ -50,10 +51,40 @@ var user = mongoose.Schema({
     cardExpiry:String,
 });
 
+var room = mongoose.Schema({
+    user1Token:String,
+    user2Token:String,
+    awardCredit:String,
+    goalDistance:String,
+    user1Distance:String,
+    user2Distance:String,
+});
+
+var friend = mongoose.Schema({
+    friendName:String,
+    friendToken:String,
+    friendCode:String,
+    token:String,
+    win:Number,
+    lose:Number,
+});
+
+var acceptFriend = mongoose.Schema({
+    token:String,
+    friendToken:String,
+    acceptToken:String,
+});
+
 var userModel = mongoose.model('userModel',user);
+var roomModel = mongoose.model('roomModel',room);
+var friendModel = mongoose.model('friendModel',friend);
+var acceptFriendModel = mongoose.model('acceptFriendModel',acceptFriend);
 
 require('./routes/auth')(app , userModel , randomString);
 require('./routes/user')(app , userModel , iamporter , IamporterError);
+require('./routes/friend')(app , friendModel , userModel , acceptFriendModel , randomString);
+require('./routes/room')(app , userModel , roomModel);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
