@@ -38,6 +38,7 @@ db.once('open', function callback () {
 var iamporter = new Iamporter();
 
 var user = mongoose.Schema({
+    token:String,
     name:String,
     id:String,
     password:String,
