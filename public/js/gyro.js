@@ -35,7 +35,7 @@ if (window.DeviceMotionEvent != undefined) {
                 beforeZ = z;
                 moveTime = moveTime + 1;
 
-                if(moveTime == 100){
+                if(moveTime == 10){
                     moveTime = 0;
 
                     $.ajax({
