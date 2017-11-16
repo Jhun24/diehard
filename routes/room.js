@@ -218,7 +218,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
 
                 }
                 else{
-                    acceptRoomModel.findOneAndRemove({"acceptToken":data.acceptToken},(err,model)=>{
+                    acceptRoomModel.deleteOne({"acceptToken":data.acceptToken},(err,model)=>{
                         if(err) throw err;
 
                         res.send(200,"remove success");
@@ -272,7 +272,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                                         userModel.update({"token":friendToken},{$set:{"credit":credit}},(err,model)=>{
                                                             if(err) throw err;
 
-                                                            roomModel.findOneAndRemove({"user2Token":data.token},(err,model)=>{
+                                                            roomModel.deleteOne({"user2Token":data.token},(err,model)=>{
                                                                 if(err) throw err;
 
                                                                 res.send(200,"you win")
@@ -333,7 +333,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                                         userModel.update({"token":friendToken},{$set:{"credit":credit}},(err,model)=>{
                                                             if(err) throw err;
 
-                                                            roomModel.findOneAndRemove({"user1Token":data.token},(err,model)=>{
+                                                            roomModel.deleteOne({"user1Token":data.token},(err,model)=>{
                                                                 if(err) throw err;
 
                                                                 res.send(200,"you win")

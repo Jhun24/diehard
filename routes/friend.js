@@ -163,7 +163,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
 
                                 saveYouFriend.save((err,model)=>{
                                     if(err) throw err;
-                                    acceptFriendModel.findOneAndRemove({"acceptToken":data.acceptToken},(err,model)=>{
+                                    acceptFriendModel.deleteOne({"acceptToken":data.acceptToken},(err,model)=>{
                                         if(err) throw err;
 
                                         res.send(200,"save success");
@@ -174,7 +174,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                     });
                 }
                 else{
-                    acceptFriendModel.findOneAndRemove({"acceptToken":data.token},(err,model)=>{
+                    acceptFriendModel.deleteOne({"acceptToken":data.token},(err,model)=>{
                         if(err) throw err;
 
                         res.send(200,"remove success");
