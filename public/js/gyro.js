@@ -24,20 +24,20 @@ if (window.DeviceMotionEvent != undefined) {
             console.log("check not work");
         }
         else{
-            var plusZ = beforeZ+30;
-            var minusZ = beforeZ-30;
+            var plusZ = beforeZ+20;
+            var minusZ = beforeZ-20;
 
-            var plusY = beforeY+30;
-            var minusY = beforeY-30;
+            var plusY = beforeY+20;
+            var minusY = beforeY-20;
 
             if(y < minusY && y > plusY && z < minusZ && z > plusZ){
                 beforeY = y;
                 beforeZ = z;
                 moveTime = moveTime + 1;
 
-                if(moveTime == 20){
+                if(moveTime == 10){
                     moveTime = 0;
-                    alert("gyro start")
+                    alert("gyro start");
                     $.ajax({
                         method:"POST",
                         url:"/room/update/userDistance",
