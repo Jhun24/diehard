@@ -30,14 +30,13 @@ if (window.DeviceMotionEvent != undefined) {
             var plusY = beforeY+30;
             var minusY = beforeY-30;
 
-            if(y > minusY && y < plusY && z > minusZ && z < plusZ){
+            if(y < minusY && y > plusY && z < minusZ && z > plusZ){
                 beforeY = y;
                 beforeZ = z;
                 moveTime = moveTime + 1;
 
                 if(moveTime == 10){
                     moveTime = 0;
-                    alert("gyro start")
                     $.ajax({
                         method:"POST",
                         url:"/room/update/userDistance",
