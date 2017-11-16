@@ -37,6 +37,7 @@ if (window.DeviceMotionEvent != undefined) {
 
                 if(moveTime == 50){
                     moveTime = 0;
+                    alert("gyro start")
                     $.ajax({
                         method:"POST",
                         url:"/room/update/userDistance",
