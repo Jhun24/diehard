@@ -4,16 +4,32 @@
 
 module.exports = friend;
 
-function friend(app , friendModel , userModel , acceptFriendModel , randomString) {
+function friend(app , friendModel , userModel , acceptFriendModel , randomString , session) {
+    app.get('/friend/find',(req,res)=>{
+        "use strict";
+        var token = req.session.token;
+        var name = req.query.name;
+
+        friendModel.find({"token":token,"friendName":name},(err,model)=>{
+            if(err) throw err;
+            if(model.length == 0){
+                res.send(400,"friend not found");
+            }
+            else{
+                res.send(200);
+            }
+        });
+    });
+
     app.get('/friend/list',(req,res)=>{
         "use strict";
-        var token = req.query.token;
+        var token = req.session.token;
 
         friendModel.find({"token":token},(err,model)=>{
             if(err) throw err;
 
             if(model.length == 0){
-                res.send(404,"user not found");
+                res.send(200,"user not found");
             }
             else{
                 res.send(200,model);
@@ -23,8 +39,8 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
 
     app.get('/friend/acceptList',(req,res)=>{
         "use strict";
-        var token = req.query.token;
-
+        var token = req.session.token;
+        console.log("acceptList Token : "+token)
         userModel.find({"token":token},(err,model)=>{
             if(err) throw err;
 
@@ -48,7 +64,8 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
     app.post('/friend/add',(req,res)=>{
         "use strict";
         var data = req.body;
-
+        data.token = req.session.token;
+        console.log("/friend/add Token : "+data.token);
         var friendName = data.name.split("#")[0];
         var friendCode = data.name.split("#")[1];
 
@@ -68,6 +85,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
 
                 friendToken = model[0]["token"];
 
+
                 userModel.find({"token":data.token},(err,model)=>{
                     if(err) throw err;
 
@@ -75,12 +93,14 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                         res.send(404,"user not found");
                     }
                     else{
-                        var userName = model[0]["name"]
+                        var userName = model[0]["name"];
+                        var userCode = model[0]["userCode"];
                         var saveAcceptFriend = new acceptFriendModel({
                             "token":data.token,
                             "friendToken":friendToken,
                             "acceptToken":acceptToken,
                             "name":userName,
+                            "code":userCode,
                         });
 
                         saveAcceptFriend.save((err,model)=>{
@@ -96,7 +116,6 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
     app.post('/friend/accept',(req,res)=>{
         "use strict";
         var data = req.body;
-
         acceptFriendModel.find({"acceptToken":data.token},(err,model)=>{
             if(err) throw err;
 

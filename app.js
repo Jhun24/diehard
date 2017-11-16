@@ -28,6 +28,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    secret:'@#@sadfdfasdfasdfasfsdfasdffsdfs#@$#$',
+    resave: false,
+    saveUninitialized:true,
+    cookie: {
+        maxAge: 1000 * 60 * 60
+    }
+}));
+
 mongoose.connect('mongodb://localhost:27017/diehard') ;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -44,7 +53,7 @@ var user = mongoose.Schema({
     id:String,
     password:String,
     profileImage:String,
-    credit:String,
+    credit:Number,
     cardNumber:String,
     cardPassword:String,
     cardBirthday:String,
@@ -58,6 +67,8 @@ var room = mongoose.Schema({
     goalDistance:Number,
     user1Distance:Number,
     user2Distance:Number,
+    user1Name:String,
+    user2Name:String,
 });
 
 var friend = mongoose.Schema({
@@ -74,6 +85,7 @@ var acceptFriend = mongoose.Schema({
     friendToken:String,
     acceptToken:String,
     name:String,
+    code:String,
 });
 
 var acceptRoom = mongoose.Schema({
@@ -83,6 +95,7 @@ var acceptRoom = mongoose.Schema({
     goalDistance:Number,
     acceptToken:String,
     name:String,
+    friendName:String,
 });
 
 var userModel = mongoose.model('userModel',user);
@@ -91,10 +104,11 @@ var friendModel = mongoose.model('friendModel',friend);
 var acceptFriendModel = mongoose.model('acceptFriendModel',acceptFriend);
 var acceptRoomModel = mongoose.model('acceptRoomModel',acceptRoom);
 
-require('./routes/auth')(app , userModel , randomString);
-require('./routes/user')(app , userModel , iamporter , IamporterError , randomString);
-require('./routes/friend')(app , friendModel , userModel , acceptFriendModel , randomString);
-require('./routes/room')(app , userModel , roomModel , acceptRoomModel , randomString , friendModel);
+require('./routes/auth')(app , userModel , randomString , session);
+require('./routes/user')(app , userModel , iamporter , IamporterError , randomString , session);
+require('./routes/friend')(app , friendModel , userModel , acceptFriendModel , randomString , session);
+require('./routes/room')(app , userModel , roomModel , acceptRoomModel , randomString , friendModel , session);
+require('./routes/route')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

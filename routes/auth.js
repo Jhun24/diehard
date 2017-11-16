@@ -1,6 +1,6 @@
 module.exports = auth;
 
-function auth(app , userModel , randomString) {
+function auth(app , userModel , randomString , session) {
 
     app.post('/auth/register',(req,res)=>{
         "use strict";
@@ -14,10 +14,11 @@ function auth(app , userModel , randomString) {
                     if(err) throw err;
                     data.token = randomString.generate();
                     data.userCode = model.length + 1;
+                    data.credit = 0;
                     var saveUser = new userModel(data);
                     saveUser.save((err,model)=>{
                         if(err) throw err;
-
+                        req.session.token = data.token;
                         res.send(200,model);
                     });
                 });
@@ -39,6 +40,8 @@ function auth(app , userModel , randomString) {
                 res.send(404,"user not found");
             }
             else{
+                req.session.token = model[0]["token"];
+                console.log(req.session.token);
                 res.send(200,model);
             }
         });

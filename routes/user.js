@@ -4,10 +4,11 @@
 
 module.exports = user;
 
-function user(app , userModel , iamporter , IamporterError , randomString) {
+function user(app , userModel , iamporter , IamporterError , randomString , session) {
     app.post('/user/update/name',(req,res)=>{
         "use strict";
         var data = req.body;
+        data.token = req.session.token;
 
         userModel.find({"token":data.token},(err,model)=>{
             if(err) throw err;
@@ -28,18 +29,19 @@ function user(app , userModel , iamporter , IamporterError , randomString) {
     app.post('/user/update/card',(req,res)=>{
         "use strict";
         var data = req.body;
-
+        data.token = req.session.token;
+        console.log(data.token);
         userModel.find({"token":data.token},(err,model)=>{
             if(err) throw err;
 
             if(model.length == 0){
-                res.send(404,"uesr not found");
+                res.send(404,"user not found");
             }
             else{
                 userModel.update({"token":data.token},{$set:{"cardNumber":data.cardNumber,"cardPassword":data.cardPassword,"cardBirthday":data.cardBirthday,"cardExpiry":data.cardExpiry}},(err,model)=>{
                     if(err) throw err;
 
-                    res.send(200 , data.cardNumber);
+                    res.send(200 , data);
                 });
             }
         });
@@ -48,6 +50,7 @@ function user(app , userModel , iamporter , IamporterError , randomString) {
     app.post('/user/charge',(req,res)=>{
         "use strict";
         var data = req.body;
+        data.token = req.session.token;
 
         userModel.find({"token":data.token},(err,model)=>{
             if(err) throw err;
@@ -79,4 +82,23 @@ function user(app , userModel , iamporter , IamporterError , randomString) {
         });
     });
 
+    app.get('/user/userData',(req,res)=>{
+        "use strict";
+        var token = req.session.token;
+
+        if(token == ""){
+            res.send(404,"token not defined");
+        }
+        else{
+            userModel.find({"token":token},(err,model)=>{
+                if(err) throw err;
+                if(model.length == 0){
+                    res.send(404,"token not defined");
+                }
+                else{
+                    res.send(200,model);
+                }
+            });
+        }
+    });
 }

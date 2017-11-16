@@ -4,10 +4,11 @@
 
 module.exports = room;
 
-function room(app , userModel , roomModel , acceptRoomModel , randomString , friendModel) {
+function room(app , userModel , roomModel , acceptRoomModel , randomString , friendModel , session) {
+
     app.get('/room/acceptList',(req,res)=>{
         "use strict";
-        var token = req.query.token;
+        var token = req.session.token;
 
         userModel.find({"token":token},(err,model)=>{
             if(err) throw err;
@@ -20,7 +21,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     if(err) throw err;
 
                     if(model.length == 0){
-                        res.send(404,"no accept list");
+                        res.send(200,"no accept list");
                     }
                     else{
                         res.send(200,model);
@@ -32,7 +33,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
 
     app.get('/room/getRoom',(req,res)=>{
         "use strict";
-        var token = req.query.token;
+        var token = req.session.token;
 
         roomModel.find({"user1Token":token},(err,model)=>{
             if(err) throw err;
@@ -56,6 +57,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
     app.post('/room/add',(req,res)=>{
         "use strict";
         var data = req.body;
+        data.token = req.session.token;
 
         var friendToken;
 
@@ -79,20 +81,53 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     }
                     else{
                         var userName = model[0]["name"]
-                        var acceptToken = randomString.generate();
-                        var saveAcceptRoom = new acceptRoomModel({
-                            "token":data.token,
-                            "friendToken":friendToken,
-                            "acceptToken":acceptToken,
-                            "goalDistance":data.goalDistance,
-                            "awardCredit":data.awardCredit,
-                            "name":userName,
-                        });
-
-                        saveAcceptRoom.save((err,model)=>{
+                        acceptRoomModel.find({"token":data.token},(err,model)=>{
                             if(err) throw err;
+                            if(model.length == 0){
+                                acceptRoomModel.find({"friendToken":data.token},(err,model)=>{
+                                    if(err) throw err;
+                                    if(model.length == 0){
+                                        acceptRoomModel.find({"token":friendToken},(err,model)=>{
+                                            if(err) throw err;
+                                            if(model.length == 0){
+                                                acceptRoomModel.find({"friendToken":friendToken},(err,model)=>{
+                                                    if(err) throw err;
+                                                    if(model.length == 0){
+                                                        var acceptToken = randomString.generate();
+                                                        var saveAcceptRoom = new acceptRoomModel({
+                                                            "token":data.token,
+                                                            "friendToken":friendToken,
+                                                            "acceptToken":acceptToken,
+                                                            "goalDistance":data.goalDistance,
+                                                            "awardCredit":data.awardCredit,
+                                                            "name":userName,
+                                                            "friendName":data.friendName,
+                                                        });
 
-                            res.send(200,"send success");
+                                                        saveAcceptRoom.save((err,model)=>{
+                                                            if(err) throw err;
+
+                                                            res.send(200,"send success");
+                                                        });
+                                                    }
+                                                    else{
+                                                        res.send(400,"friend already have battle");
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                res.send(400,"friend already have battle");
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        res.send(400,"you already have battle");
+                                    }
+                                });
+                            }
+                            else{
+                                res.send(400,"you already have battle");
+                            }
                         });
                     }
                 });
@@ -103,6 +138,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
     app.post('/room/accept',(req,res)=>{
         "use strict";
         var data = req.body;
+        data.token = req.session.token;
 
         acceptRoomModel.find({"acceptToken":data.acceptToken},(err,model)=>{
             if(err) throw err;
@@ -113,6 +149,8 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
             else{
                 var userToken = model[0]["token"];
                 var friendToken = model[0]["friendToken"];
+                var user1Name = model[0]["name"];
+                var user2Name = model[0]["friendName"];
 
                 console.log(userToken + "         "+ friendToken);
                 var dataModel = model;
@@ -145,6 +183,8 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                                                 goalDistance:goalDistance,
                                                                 user1Distance:0,
                                                                 user2Distance:0,
+                                                                user1Name:user1Name,
+                                                                user2Name:user2Name,
                                                             });
 
                                                             saveRoom.save((err,model)=>{
@@ -191,6 +231,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
     app.post('/room/update/userDistance',(req,res)=>{
         "use strict";
         var data = req.body;
+        data.token = req.session.token;
 
         roomModel.find({"user1Token":data.token},(err,model)=>{
             if(err) throw err;
@@ -317,5 +358,62 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                 });
             }
         });
+    });
+
+    app.get('/room/check',(req,res)=>{
+        "use strict";
+        var token = req.session.token;
+
+        if(token == ""){
+            res.send(400,"please login first");
+        }
+        else{
+            roomModel.find({"user1Token":token},(err,model)=>{
+                if(err) throw err;
+                if(model.length == 0){
+                    roomModel.find({"user1Token":token},(err,model)=>{
+                        if(err) throw err;
+                        if(model.length == 0){
+                            res.send(200,"nobattle");
+                        }
+                        else{
+                            res.send(200,"battle");
+                        }
+                    });
+                }
+                else{
+                    res.send(200,"battle")
+                }
+            });
+        }
+    });
+
+    app.get('/room/battleData',(req,res)=>{
+        "use strict";
+        var token = req.session.token;
+
+        if(token == ""){
+            res.send(400,"please login first");
+        }
+        else{
+            roomModel.find({"user1Token":token},(err,model)=>{
+                if(err) throw err;
+                if(model.length == 0){
+                    roomModel.find({"user1Token":token},(err,model)=>{
+                        if(err) throw err;
+
+                        if(model.length == 0){
+                            res.send(404,"room data not found")
+                        }
+                        else{
+                            res.send(200,model);
+                        }
+                    });
+                }
+                else{
+                    res.send(200,model);
+                }
+            });
+        }
     });
 }
