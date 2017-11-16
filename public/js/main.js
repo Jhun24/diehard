@@ -99,6 +99,7 @@ $(".ok-btn").click(function () {
         },
         error: function (err) {
             console.log(err);
+            alert(err);
         }
     });
 
