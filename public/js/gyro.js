@@ -30,7 +30,7 @@ if (window.DeviceMotionEvent != undefined) {
             var plusY = beforeY+20;
             var minusY = beforeY-20;
 
-            if(y < minusY && y > plusY && z < minusZ && z > plusZ){
+            if((y < minusY || y > plusY) && (z < minusZ || z > plusZ)){
                 beforeY = y;
                 beforeZ = z;
                 moveTime = moveTime + 1;
