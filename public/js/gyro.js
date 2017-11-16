@@ -45,6 +45,7 @@ if (window.DeviceMotionEvent != undefined) {
                         success:function (data) {
                             "use strict";
                             var userDistance = parseInt($(".user-text").text())+1;
+                            alert(userDistance);
                             $(".user-text").text(userDistance);
                         },
                         error:function (err) {
