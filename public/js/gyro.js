@@ -41,11 +41,11 @@ if (window.DeviceMotionEvent != undefined) {
             console.log("check not work");
         }
         else{
-            var plusZ = beforeZ+20;
-            var minusZ = beforeZ-20;
+            var plusZ = beforeZ+10;
+            var minusZ = beforeZ-10;
 
-            var plusY = beforeY+20;
-            var minusY = beforeY-20;
+            var plusY = beforeY+10;
+            var minusY = beforeY-10;
 
 
             if((y < minusY || y > plusY) && (z < minusZ || z > plusZ)){
