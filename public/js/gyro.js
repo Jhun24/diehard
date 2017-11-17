@@ -47,17 +47,15 @@ if (window.DeviceMotionEvent != undefined) {
             var plusY = beforeY+20;
             var minusY = beforeY-20;
 
-            $("body").append("Y : "+plusY+" Z : "+plusZ);
 
             if((y < minusY || y > plusY) && (z < minusZ || z > plusZ)){
                 beforeY = y;
                 beforeZ = z;
                 moveTime = moveTime + 1;
 
-                if(moveTime == 20){
+                if(moveTime == 10){
                     alert(moveTime)
                     moveTime = 0;
-                    alert("gyro start");
                     $.ajax({
                         method:"POST",
                         url:"/room/update/userDistance",
