@@ -244,7 +244,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     else{
                         var userDistance = model[0]["user2Distance"] + data.userDistance;
                         var goalCredit = parseInt(model[0]["awardCredit"]);
-
+                        console.log(goalCredit + "  " + userDistance);
                         if(userDistance >= model[0]["goalDistance"]){
                             friendModel.find({"token":data.token},(err,model)=>{
                                 if(err) throw err;
@@ -263,6 +263,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                                             userModel.find({"token":data.token},(err,model)=>{
                                                 if(err) throw err;
                                                 var credit = model[0]["credit"] + goalCredit;
+                                                console.log("Credit" + credit)
                                                 userModel.update({"token":data.token},{$set:{"credit":credit}},(err,model)=>{
                                                     if(err) throw err;
 
