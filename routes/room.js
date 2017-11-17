@@ -236,13 +236,14 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
         roomModel.find({"user1Token":data.token},(err,model)=>{
             if(err) throw err;
             if(model.length == 0){
+                console.log("first find Pass!")
                 roomModel.find({"user2Token":data.token},(err,model)=>{
                     if(err) throw err;
                     if(model.length == 0){
                         res.send(409,"room not found")
                     }
                     else{
-                        console.log(model[0]["awardCredit"]);
+                        console.log("awardCredit : "+model[0]["awardCredit"]);
                         var userDistance = model[0]["user2Distance"] + data.userDistance;
                         var goalCredit = parseInt(model[0]["awardCredit"]);
                         console.log(goalCredit + "  " + userDistance);
