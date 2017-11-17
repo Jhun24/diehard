@@ -306,6 +306,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                         res.send(409,"room not found")
                     }
                     else{
+                        console.log("second find Pass!")
                         var userDistance = model[0]["user1Distance"] + data.userDistance;
                         var goalCredit = parseInt(model[0]["awardCredit"]);
 
