@@ -60,7 +60,7 @@ $(".fuck-you-btn").click(function () {
     $.ajax({
         method: "POST",
         url: "/room/accept",
-        data: {"acceptToken": acceptToken, "answer": "none"},
+        data: {"token": acceptToken, "answer": "none"},
         success: function (data) {
             "use strict";
             console.log(data);
@@ -81,7 +81,7 @@ $(".ok-btn").click(function () {
     $.ajax({
         method: "POST",
         url: "/room/accept",
-        data: {"acceptToken": acceptToken, "answer": "save"},
+        data: {"token": acceptToken, "answer": "save"},
         success: function (data) {
             "use strict";
             if(data == "acceptToken not found"){

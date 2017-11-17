@@ -82,7 +82,7 @@ $(".fuck-you-btn").click(function () {
         $.ajax({
             method: "POST",
             url: "/friend/accept",
-            data: {"acceptToken": acceptToken, "answer": "none"},
+            data: {"token": acceptToken, "answer": "none"},
             success: function (data) {
                 "use strict";
                 console.log(data);

@@ -116,6 +116,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
     app.post('/friend/accept',(req,res)=>{
         "use strict";
         var data = req.body;
+
         acceptFriendModel.find({"acceptToken":data.token},(err,model)=>{
             if(err) throw err;
 
@@ -163,7 +164,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
 
                                 saveYouFriend.save((err,model)=>{
                                     if(err) throw err;
-                                    acceptFriendModel.deleteOne({"acceptToken":data.acceptToken},(err,model)=>{
+                                    acceptFriendModel.remove({"acceptToken":data.acceptToken},(err,model)=>{
                                         if(err) throw err;
 
                                         res.send(200,"save success");
@@ -174,7 +175,7 @@ function friend(app , friendModel , userModel , acceptFriendModel , randomString
                     });
                 }
                 else{
-                    acceptFriendModel.deleteOne({"acceptToken":data.token},(err,model)=>{
+                    acceptFriendModel.remove({"acceptToken":data.token},(err,model)=>{
                         if(err) throw err;
 
                         res.send(200,"remove success");
