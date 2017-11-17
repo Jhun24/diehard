@@ -189,8 +189,13 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
 
                                                             saveRoom.save((err,model)=>{
                                                                 if(err) throw err;
-                                                                res.send(200,"save room success");
+                                                                acceptRoomModel.remove({"acceptToken":data.acceptToken},(err,model)=>{
+                                                                    if(err) throw err;
+
+                                                                    res.send(200,"save room success");
+                                                                });
                                                             });
+
                                                         }
                                                     })
                                                 }
