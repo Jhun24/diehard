@@ -244,7 +244,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     }
                     else{
                         console.log("awardCredit : "+model[0]["awardCredit"]);
-                        var userDistance = model[0]["user2Distance"] + data.userDistance;
+                        var userDistance = parseInt(model[0]["user2Distance"]) + parseInt(data.userDistance);
                         var goalCredit = parseInt(model[0]["awardCredit"]);
                         console.log(goalCredit + "  " + userDistance);
                         if(userDistance >= model[0]["goalDistance"]){
@@ -307,7 +307,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     }
                     else{
                         console.log("second find Pass!")
-                        var userDistance = model[0]["user1Distance"] + data.userDistance;
+                        var userDistance = parseInt(model[0]["user1Distance"]) + parseInt(data.userDistance);
                         var goalCredit = parseInt(model[0]["awardCredit"]);
 
                         if(userDistance >= model[0]["goalDistance"]){
