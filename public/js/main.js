@@ -21,6 +21,7 @@ $(document).ready(function () {
                 $(".award-credit").text(data[0]["awardCredit"]+" 원");
                 $(".award-distance").text(data[0]["goalDistance"]+" 걸음");
                 acceptToken = data[0]["acceptToken"];
+                console.log(acceptToken);
                 $(".pop-up").css({
                     "display":"flex"
                 });
@@ -60,7 +61,7 @@ $(".fuck-you-btn").click(function () {
     $.ajax({
         method: "POST",
         url: "/room/accept",
-        data: {"token": acceptToken, "answer": "none"},
+        data: {"acceptToken": acceptToken, "answer": "none"},
         success: function (data) {
             "use strict";
             console.log(data);
@@ -81,7 +82,7 @@ $(".ok-btn").click(function () {
     $.ajax({
         method: "POST",
         url: "/room/accept",
-        data: {"token": acceptToken, "answer": "save"},
+        data: {"acceptToken": acceptToken, "answer": "save"},
         success: function (data) {
             "use strict";
             if(data == "acceptToken not found"){
