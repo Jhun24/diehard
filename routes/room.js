@@ -242,6 +242,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                         res.send(409,"room not found")
                     }
                     else{
+                        console.log(model[0]["awardCredit"]);
                         var userDistance = model[0]["user2Distance"] + data.userDistance;
                         var goalCredit = parseInt(model[0]["awardCredit"]);
                         console.log(goalCredit + "  " + userDistance);
