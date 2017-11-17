@@ -292,7 +292,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                         else{
                             roomModel.update({"user2Token":data.token},{$set:{"user2Distance":userDistance}},(err,model)=>{
                                 if(err) throw err;
-
+                                console.log(userDistance);
                                 res.send(200 , "userDistance update success");
                             });
                         }
@@ -354,7 +354,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                         else{
                             roomModel.update({"user1Token":data.token},{$set:{"user1Distance":userDistance}},(err,model)=>{
                                 if(err) throw err;
-
+                                console.log(userDistance);
                                 res.send(200 , "userDistance update success");
                             });
                         }

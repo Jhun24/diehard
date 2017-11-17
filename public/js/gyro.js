@@ -64,6 +64,11 @@ if (window.DeviceMotionEvent != undefined) {
                             "use strict";
                             var userDistance = parseInt($(".user-text").text())+1;
                             $(".user-text").text(userDistance);
+
+                            if(data == "you win"){
+                                alert("you win");
+                                location.href="/battleNone"
+                            }
                         },
                         error:function (err) {
                             console.log(err);

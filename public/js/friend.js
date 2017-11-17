@@ -139,7 +139,7 @@ $(".ok-btn").click(function () {
 
                                 inputData += '<div class="friend-box"><div class="friend-img"></div><div class="friend-data-box">';
                                 inputData += '<p>친구이름</p><div class="friend-data">';
-                                inputData += '<h4>'+data[data.length - 1]["friendName"]+'</h4><p>'+data[data.length - 1]["friendCode"]+'</p></div></div><div class="border"></div><div class="battle-data">'
+                                inputData += '<h4>'+data[data.length - 1]["friendName"]+'</h4><p>'+data[data.length - 1]["friendCode"]+"# "+'</p></div></div><div class="border"></div><div class="battle-data">'
                                 inputData += '<p>사용자님과의 전적</p><h4>'+data[data.length - 1]["win"] +'승'+data[data.length - 1]["lose"]+'패'+'</h4></div></div>'
 
 
