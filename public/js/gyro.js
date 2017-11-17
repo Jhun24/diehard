@@ -26,8 +26,8 @@ var moveTime = 0;
 //         error:function (err) {
 //             console.log(err);
 //         }
-//     });
-})
+// //     });
+// })
 
 if (window.DeviceMotionEvent != undefined) {
     window.ondevicemotion = function(e) {
@@ -54,7 +54,7 @@ if (window.DeviceMotionEvent != undefined) {
                 beforeZ = z;
                 moveTime = moveTime + 1;
 
-                if(moveTime == 5){
+                if(moveTime == 20){
                     alert(moveTime)
                     moveTime = 0;
                     alert("gyro start");
