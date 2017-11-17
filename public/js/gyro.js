@@ -53,6 +53,7 @@ if (window.DeviceMotionEvent != undefined) {
                 moveTime = moveTime + 1;
 
                 if(moveTime == 5){
+                    alert(moveTime)
                     moveTime = 0;
                     alert("gyro start");
                     $.ajax({
