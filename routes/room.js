@@ -232,7 +232,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
         "use strict";
         var data = req.body;
         data.token = req.session.token;
-
+        console.log("/room/update/userDistance : " + data.token);
         roomModel.find({"user1Token":data.token},(err,model)=>{
             if(err) throw err;
             if(model.length == 0){

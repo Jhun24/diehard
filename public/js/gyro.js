@@ -18,6 +18,7 @@ $(document).ready(function () {
         data:{"userDistance":1},
         success:function (data) {
             "use strict";
+            console.log($(".user-text").text())
             var userDistance = parseInt($(".user-text").text())+1;
             alert(userDistance);
             $(".user-text").text(userDistance);
