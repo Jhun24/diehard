@@ -10,23 +10,23 @@ var beforeZ = 0;
 var beforeY = 0;
 
 var moveTime = 0;
-
-$(document).ready(function () {
-    $.ajax({
-        method:"POST",
-        url:"/room/update/userDistance",
-        data:{"userDistance":1},
-        success:function (data) {
-            "use strict";
-            console.log($(".user-text").text())
-            var userDistance = parseInt($(".user-text").text())+1;
-            alert(userDistance);
-            $(".user-text").text(userDistance);
-        },
-        error:function (err) {
-            console.log(err);
-        }
-    });
+//
+// $(document).ready(function () {
+//     $.ajax({
+//         method:"POST",
+//         url:"/room/update/userDistance",
+//         data:{"userDistance":1},
+//         success:function (data) {
+//             "use strict";
+//             console.log($(".user-text").text())
+//             var userDistance = parseInt($(".user-text").text())+1;
+//             alert(userDistance);
+//             $(".user-text").text(userDistance);
+//         },
+//         error:function (err) {
+//             console.log(err);
+//         }
+//     });
 })
 
 if (window.DeviceMotionEvent != undefined) {
@@ -62,7 +62,6 @@ if (window.DeviceMotionEvent != undefined) {
                         success:function (data) {
                             "use strict";
                             var userDistance = parseInt($(".user-text").text())+1;
-                            alert(userDistance);
                             $(".user-text").text(userDistance);
                         },
                         error:function (err) {
