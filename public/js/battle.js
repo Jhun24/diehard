@@ -19,11 +19,11 @@ $(document).ready(function () {
             var friendWidth = data[0]["user2Distance"] / data[0]["goalDistance"] * 100;
 
             $(".user-data").css({
-                "width":userWidth,
+                "width":userWidth+"%",
             });
 
             $(".friend-data").css({
-                "width":friendWidth
+                "width":friendWidth+"%"
             })
         },
         error:function (err) {

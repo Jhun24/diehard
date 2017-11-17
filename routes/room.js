@@ -243,7 +243,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
                     }
                     else{
                         var userDistance = model[0]["user2Distance"] + data.userDistance;
-                        var goalCredit = model[0]["goalCredit"];
+                        var goalCredit = parseInt(model[0]["awardCredit"]);
 
                         if(userDistance >= model[0]["goalDistance"]){
                             friendModel.find({"token":data.token},(err,model)=>{
