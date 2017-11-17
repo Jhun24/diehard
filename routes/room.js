@@ -380,7 +380,7 @@ function room(app , userModel , roomModel , acceptRoomModel , randomString , fri
             roomModel.find({"user1Token":token},(err,model)=>{
                 if(err) throw err;
                 if(model.length == 0){
-                    roomModel.find({"user1Token":token},(err,model)=>{
+                    roomModel.find({"user2Token":token},(err,model)=>{
                         if(err) throw err;
                         if(model.length == 0){
                             res.send(200,"nobattle");
