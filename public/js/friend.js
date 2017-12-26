@@ -43,7 +43,7 @@ function friendAcceptList() {
                 // location.href="/"
             }
             else{
-                var inputData = "";
+                var inputData = '<div class="friend-search-box"> <input type="text" class="friend-name" placeholder="친구 이름을 입력해주세요 ( EX : 홍길동#1101)"div class="friend-add-btn">친구 추가하기</div></div>';
                 for(var i = 0; i<data.length; i++){
                     inputData += '<div class="friend-box"><div class="friend-img"></div><div class="friend-data-box">';
                     inputData += '<p>친구이름</p><div class="friend-data">';
@@ -51,7 +51,7 @@ function friendAcceptList() {
                     inputData += '<p>사용자님과의 전적</p><h4>'+data[i]["win"] +'승'+data[i]["lose"]+'패'+'</h4></div></div>'
                 }
 
-                $(".main-content-box").append(inputData);
+                $(".main-content-box").html(inputData);
             }
         },
         error:function (err) {
