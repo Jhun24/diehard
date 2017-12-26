@@ -4,33 +4,7 @@
 var acceptToken = "";
 var popupStatus = "";
 
-
-$(document).ready(function () {
-    $.ajax({
-        method:"GET",
-        url:"/friend/list",
-        success:function (data) {
-            if(data == "user not found"){
-                // alert("server error : user not found");
-                // location.href="/"
-            }
-            else{
-                var inputData = "";
-                for(var i = 0; i<data.length; i++){
-                    inputData += '<div class="friend-box"><div class="friend-img"></div><div class="friend-data-box">';
-                    inputData += '<p>친구이름</p><div class="friend-data">';
-                    inputData += '<h4>'+data[i]["friendName"]+'</h4><p>'+data[i]["friendCode"]+'</p></div></div><div class="border"></div><div class="battle-data">'
-                    inputData += '<p>사용자님과의 전적</p><h4>'+data[i]["win"] +'승'+data[i]["lose"]+'패'+'</h4></div></div>'
-                }
-
-                $(".main-content-box").append(inputData);
-            }
-        },
-        error:function (err) {
-            console.log(err);
-        }
-    });
-
+function friendAcceptList() {
     $.ajax({
         method:"GET",
         url:"/friend/acceptList",
@@ -59,6 +33,36 @@ $(document).ready(function () {
             console.log(err);
         }
     });
+
+    $.ajax({
+        method:"GET",
+        url:"/friend/list",
+        success:function (data) {
+            if(data == "user not found"){
+                // alert("server error : user not found");
+                // location.href="/"
+            }
+            else{
+                var inputData = "";
+                for(var i = 0; i<data.length; i++){
+                    inputData += '<div class="friend-box"><div class="friend-img"></div><div class="friend-data-box">';
+                    inputData += '<p>친구이름</p><div class="friend-data">';
+                    inputData += '<h4>'+data[i]["friendName"]+'</h4><p>'+data[i]["friendCode"]+'</p></div></div><div class="border"></div><div class="battle-data">'
+                    inputData += '<p>사용자님과의 전적</p><h4>'+data[i]["win"] +'승'+data[i]["lose"]+'패'+'</h4></div></div>'
+                }
+
+                $(".main-content-box").append(inputData);
+            }
+        },
+        error:function (err) {
+            console.log(err);
+        }
+    });
+}
+
+$(document).ready(function () {
+
+    setInterval(friendAcceptList,2000);
 });
 
 $(".friend-add-btn").click(function () {

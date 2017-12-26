@@ -1,7 +1,8 @@
 /**
  * Created by janghunlee on 2017. 11. 17..
  */
-$(document).ready(function () {
+
+function getRoom() {
     $.ajax({
         method:"GET",
         url:"/room/getRoom",
@@ -30,4 +31,8 @@ $(document).ready(function () {
             console.log(err);
         }
     });
+}
+$(document).ready(function () {
+    "use strict";
+    setInterval(getRoom,1000);
 });

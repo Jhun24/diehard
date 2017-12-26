@@ -34,4 +34,9 @@ function route(app) {
         "use strict";
         res.render("setting.html");
     });
+
+    app.get('/camera',(req,res)=>{
+        "use strict";
+        res.render('camera.html');
+    });
 }

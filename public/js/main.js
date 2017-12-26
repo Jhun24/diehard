@@ -4,7 +4,8 @@
 
 var acceptToken = "";
 
-$(document).ready(function () {
+function acceptRoom (){
+    "use strict";
     $.ajax({
         method:"GET",
         url:"/room/acceptList",
@@ -31,6 +32,11 @@ $(document).ready(function () {
             console.log(err);
         }
     });
+}
+
+
+$(document).ready(function () {
+    setInterval(acceptRoom,3000);
 });
 
 $(".header-btn").click(function () {
